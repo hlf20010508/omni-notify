@@ -1,0 +1,5 @@
+/target
+.DS_Store
+devrc.sh
+dev.sh
+test*
