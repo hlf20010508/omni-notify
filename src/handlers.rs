@@ -1,5 +1,7 @@
-use crate::func_builder;
-
 mod email;
+mod push;
 
-func_builder!(email);
+crate::func_builder!{
+    email,
+    push
+}

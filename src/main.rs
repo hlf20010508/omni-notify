@@ -4,6 +4,7 @@ use env_logger::Env;
 
 mod handlers;
 mod responses;
+mod requests;
 mod structures;
 mod utils;
 
@@ -18,16 +19,28 @@ async fn main() -> std::io::Result<()> {
     return HttpServer::new(|| {
         App::new()
             .route(
-                "/get/notify/email",
-                web::get().to(handlers::get::notify::email),
+                "/get/email",
+                web::get().to(handlers::get::email),
             )
             .route(
-                "/post/json/notify/email",
-                web::post().to(handlers::post::json::notify::email),
+                "/post/json/email",
+                web::post().to(handlers::post::json::email),
             )
             .route(
-                "/post/form/notify/email",
-                web::post().to(handlers::post::form::notify::email),
+                "/post/form/email",
+                web::post().to(handlers::post::form::email),
+            )
+            .route(
+                "/get/push",
+                web::get().to(handlers::get::push),
+            )
+            .route(
+                "/post/json/push",
+                web::post().to(handlers::post::json::push),
+            )
+            .route(
+                "/post/form/push",
+                web::post().to(handlers::post::form::push),
             )
             .wrap(Logger::default())
     })
