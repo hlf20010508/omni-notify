@@ -58,4 +58,4 @@ jobs:
     
     - name: Send Notification
       run: |
-        curl -X POST -H "Content-Type: application/json" -d "{\"subject\": \"Github Actions Notification\", \"body\": \"$GITHUB_REPOSITORY@$TAG_NAME build completed.\"}" ${{ secrets.WEBHOOK_URL }}
+        curl -X POST -d "title=Github Actions Notification&body=$GITHUB_REPOSITORY@$TAG_NAME build completed." ${{ secrets.WEBHOOK_URL }}
