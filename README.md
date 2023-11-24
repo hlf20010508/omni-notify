@@ -9,31 +9,37 @@ A notification server written in rust.
 ## 接口
 ### email
 - `/get/email`, 参数
-    - `subject`: 主题
+    - `title`: 主题
     - `body`: 正文
 - `/post/json/email`, 接收`json`格式数据，参数
-    - `subject`: 主题
+    - `title`: 主题
     - `body`: 正文
 - `/post/form/email`, 接收`form`格式数据，参数
-    - `subject`: 主题
+    - `title`: 主题
     - `body`: 正文
 
 ### push
 - `/get/push`, 参数
-    - `text`: 文本
+    - `title`: 主题
+    - `body`: 正文
 - `/post/json/push`, 接收`json`格式数据，参数
-    - `text`: 文本
+    - `title`: 主题
+    - `body`: 正文
 - `/post/form/push`, 接收`form`格式数据，参数
-    - `text`: 文本
+    - `title`: 主题
+    - `body`: 正文
 
 ## Docker部署
 ```sh
 PORT=8080 # 改成你的端口号
+# email
 EMAIL=xxxx@xxx.com # 改成你的邮箱
 SMTP_SERVER=smtp.xxxx.com # 改成你的smtp服务器
 USER_NAME=xxxxxx # 改成你的smtp服务器用户名
 PASSWORD=xxxxxx # 改成你的smtp服务器密码
+# push
 PUSHKEY=xxxxxx # 改成你的pushdeer的pushkey
+# 部署
 docker run -d --name omni-notify -p $PORT:8080 hlf01/omni-notify --email $EMAIL --server $SMTP_SERVER --username $USER_NAME --password $PASSWORD --pushkey $PUSHKEY
 ```
 
@@ -41,9 +47,9 @@ docker run -d --name omni-notify -p $PORT:8080 hlf01/omni-notify --email $EMAIL 
 ```yml
 version: '3.8'
 services:
-  webhook:
-    container_name: webhook
-    image: hlf01/webhook
+  omni-notify:
+    container_name: omni-notify
+    image: hlf01/omni-notify
     restart: always
     network_mode: bridge
     ports:

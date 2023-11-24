@@ -8,7 +8,9 @@ macro_rules! push {
 
             let params = RequestPushParams {
                 pushkey,
-                text: params.text.clone(),
+                text: params.title.clone(),
+                desp: params.body.clone(),
+                type_field: String::from("markdown"),
             };
 
             let result = get_value_or_response!(requests::get(&url, params).await);

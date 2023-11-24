@@ -11,7 +11,7 @@ macro_rules! email {
             let email = get_value_or_response!(Message::builder()
                 .from(get_value_or_response!(email_address.parse()))
                 .to(get_value_or_response!(email_address.parse()))
-                .subject(&params.subject)
+                .subject(&params.title)
                 .header(ContentType::TEXT_PLAIN)
                 .body(params.body.clone()));
 
