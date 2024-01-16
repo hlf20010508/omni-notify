@@ -1,12 +1,10 @@
-use actix_web::middleware::Logger;
+use actix_web::http::header;
+use actix_web::middleware::{DefaultHeaders, Logger};
 use actix_web::{web, App, HttpServer};
 use env_logger::Env;
 
 mod handlers;
-mod responses;
-mod requests;
 mod structures;
-mod utils;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -18,30 +16,9 @@ async fn main() -> std::io::Result<()> {
 
     return HttpServer::new(|| {
         App::new()
-            .route(
-                "/get/email",
-                web::get().to(handlers::get::email),
-            )
-            .route(
-                "/post/json/email",
-                web::post().to(handlers::post::json::email),
-            )
-            .route(
-                "/post/form/email",
-                web::post().to(handlers::post::form::email),
-            )
-            .route(
-                "/get/push",
-                web::get().to(handlers::get::push),
-            )
-            .route(
-                "/post/json/push",
-                web::post().to(handlers::post::json::push),
-            )
-            .route(
-                "/post/form/push",
-                web::post().to(handlers::post::form::push),
-            )
+            .route("/email", web::route().to(handlers::email::email_handler))
+            .route("/push", web::route().to(handlers::push::push_handler))
+            .wrap(DefaultHeaders::new().add((header::CONTENT_TYPE, "text/plain; charset=utf-8")))
             .wrap(Logger::default())
     })
     .bind((HOST, PORT))?

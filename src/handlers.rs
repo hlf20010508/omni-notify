@@ -1,7 +1,2 @@
-mod email;
-mod push;
-
-crate::func_builder!{
-    email,
-    push
-}
+pub mod email;
+pub mod push;

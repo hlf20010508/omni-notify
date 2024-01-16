@@ -8,24 +8,14 @@ A notification server written in rust.
 
 ## 接口
 ### email
-- `/get/email`, 参数
-    - `title`: 主题
-    - `body`: 正文
-- `/post/json/email`, 接收`json`格式数据，参数
-    - `title`: 主题
-    - `body`: 正文
-- `/post/form/email`, 接收`form`格式数据，参数
+支持GET，POST-FORM，POST-JSON
+- `/email`, 参数
     - `title`: 主题
     - `body`: 正文
 
 ### push
-- `/get/push`, 参数
-    - `title`: 主题
-    - `body`: 正文（选填）
-- `/post/json/push`, 接收`json`格式数据，参数
-    - `title`: 主题
-    - `body`: 正文（选填）
-- `/post/form/push`, 接收`form`格式数据，参数
+支持GET，POST-FORM，POST-JSON
+- `/push`, 参数
     - `title`: 主题
     - `body`: 正文（选填）
 
