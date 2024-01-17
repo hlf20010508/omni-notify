@@ -1,3 +1,10 @@
+/*
+:project: webhook
+:author: L-ING
+:copyright: (C) 2024 L-ING <hlf01@icloud.com>
+:license: MIT, see LICENSE for more details.
+*/
+
 use actix_web::{web, HttpResponse};
 use pico_args::Arguments;
 use std::error::Error;
