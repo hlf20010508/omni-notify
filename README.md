@@ -41,9 +41,8 @@ services:
     container_name: omni-notify
     image: hlf01/omni-notify
     restart: always
-    network_mode: bridge
     ports:
-      - 8080:8080 # 改成你的端口号
+      - xxxx:8080 # 改成你的端口号
     # 以下改成你自己的配置
     command: >
       --email xxxx@xxx.com
