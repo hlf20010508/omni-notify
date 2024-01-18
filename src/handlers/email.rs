@@ -41,7 +41,7 @@ pub async fn email_handler(
         .to(email_address.parse()?)
         .subject(&params.title)
         .header(ContentType::TEXT_PLAIN)
-        .body(params.body.clone())?;
+        .body(params.body)?;
 
     let creds = Credentials::new(username, password);
 

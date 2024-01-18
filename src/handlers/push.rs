@@ -17,8 +17,8 @@ pub async fn push_handler(
     json: Option<web::Json<PushParams>>,
 ) -> Result<HttpResponse, Box<dyn Error>> {
     let mut args = Arguments::from_env();
-    let pushkey = args.value_from_str("--pushkey")?;
-    let url = String::from("https://api2.pushdeer.com/message/push");
+    let pushkey: String = args.value_from_str("--pushkey")?;
+    let url: String = "https://api2.pushdeer.com/message/push".into();
 
     let push_params: PushParams;
 
@@ -34,9 +34,9 @@ pub async fn push_handler(
 
     let params = RequestPushParams {
         pushkey,
-        text: push_params.title.clone(),
-        desp: push_params.body.clone(),
-        type_field: String::from("markdown"),
+        text: push_params.title,
+        desp: push_params.body,
+        type_field: "markdown".into(),
     };
 
     let client = reqwest::Client::new();
