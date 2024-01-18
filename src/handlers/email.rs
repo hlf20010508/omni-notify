@@ -9,9 +9,9 @@ use actix_web::{web, HttpResponse};
 use lettre::message::header::ContentType;
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, SmtpTransport, Transport};
-use pico_args::Arguments;
 use std::error::Error;
 
+use crate::env::{EMAIL, SMTP_PASSWORD, SMTP_SERVER, SMTP_USERNAME};
 use crate::structures::MailParams;
 
 pub async fn email_handler(
@@ -19,11 +19,10 @@ pub async fn email_handler(
     form: Option<web::Form<MailParams>>,
     json: Option<web::Json<MailParams>>,
 ) -> Result<HttpResponse, Box<dyn Error>> {
-    let mut args = Arguments::from_env();
-    let email_address: String = args.value_from_str("--email")?;
-    let smtp_server_address: String = args.value_from_str("--smtp-server")?;
-    let username: String = args.value_from_str("--smtp-username")?;
-    let password: String = args.value_from_str("--smtp-password")?;
+    let email_address = EMAIL.as_ref()?;
+    let smtp_server = SMTP_SERVER.as_ref()?;
+    let smtp_username = SMTP_USERNAME.as_ref()?;
+    let smtp_password = SMTP_PASSWORD.as_ref()?;
 
     let params: MailParams;
     if let Some(query_data) = query {
@@ -43,9 +42,9 @@ pub async fn email_handler(
         .header(ContentType::TEXT_PLAIN)
         .body(params.body)?;
 
-    let creds = Credentials::new(username, password);
+    let creds = Credentials::new(smtp_username.into(), smtp_password.into());
 
-    let mailer = SmtpTransport::starttls_relay(&smtp_server_address)?
+    let mailer = SmtpTransport::starttls_relay(smtp_server)?
         .credentials(creds)
         .build();
 

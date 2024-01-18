@@ -7,18 +7,17 @@
 
 use actix_web::{web, HttpResponse};
 use std::error::Error;
-use pico_args::Arguments;
 
 use crate::structures::{TelegramParams, RequestTelegramParams};
+use crate::env::{TG_BOT_TOKEN, TG_CHAT_ID};
 
 pub async fn telegram_handler(
     query: Option<web::Query<TelegramParams>>,
     form: Option<web::Form<TelegramParams>>,
     json: Option<web::Json<TelegramParams>>,
 ) -> Result<HttpResponse, Box<dyn Error>> {
-    let mut args = Arguments::from_env();
-    let tg_bot_token: String = args.value_from_str("--tg-bot-token")?;
-    let chat_id: String = args.value_from_str("--tg-chat-id")?;
+    let tg_bot_token = TG_BOT_TOKEN.as_ref()?;
+    let chat_id = TG_CHAT_ID.as_ref()?;
 
     let params: TelegramParams;
     if let Some(query_data) = query {
@@ -32,7 +31,7 @@ pub async fn telegram_handler(
     }
 
     let request_params = RequestTelegramParams {
-        chat_id,
+        chat_id: chat_id.into(),
         text: params.text,
     };
 

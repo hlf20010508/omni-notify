@@ -6,9 +6,9 @@
 */
 
 use actix_web::{web, HttpResponse};
-use pico_args::Arguments;
 use std::error::Error;
 
+use crate::env::PUSHDEER_KEY;
 use crate::structures::{PushParams, RequestPushParams};
 
 pub async fn push_handler(
@@ -16,8 +16,7 @@ pub async fn push_handler(
     form: Option<web::Form<PushParams>>,
     json: Option<web::Json<PushParams>>,
 ) -> Result<HttpResponse, Box<dyn Error>> {
-    let mut args = Arguments::from_env();
-    let pushkey: String = args.value_from_str("--pushdeer-key")?;
+    let pushdeer_key = PUSHDEER_KEY.as_ref()?;
     let url: String = "https://api2.pushdeer.com/message/push".into();
 
     let push_params: PushParams;
@@ -33,7 +32,7 @@ pub async fn push_handler(
     }
 
     let params = RequestPushParams {
-        pushkey,
+        pushkey: pushdeer_key.into(),
         text: push_params.title,
         desp: push_params.body,
         type_field: "markdown".into(),
