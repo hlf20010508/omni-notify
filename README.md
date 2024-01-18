@@ -3,6 +3,7 @@ A notification server written in rust.
 
 - 通过邮件接收通知
 - 通过[PushDeer](https://github.com/easychen/pushdeer)接收通知
+- 通过Telegram接收通知
 
 **不需要使用的功能无需填写对应的配置参数**
 

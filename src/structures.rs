@@ -19,6 +19,17 @@ pub struct PushParams {
     pub body: Option<String>,
 }
 
+#[derive(Deserialize)]
+pub struct TelegramParams {
+    pub text: String,
+}
+
+#[derive(Serialize)]
+pub struct RequestTelegramParams {
+    pub chat_id: String,
+    pub text: String,
+}
+
 #[derive(Serialize)]
 pub struct RequestPushParams {
     pub pushkey: String,

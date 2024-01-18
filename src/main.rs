@@ -25,6 +25,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .route("/email", web::route().to(handlers::email::email_handler))
             .route("/push", web::route().to(handlers::push::push_handler))
+            .route("/telegram", web::route().to(handlers::telegram::telegram_handler))
             .wrap(DefaultHeaders::new().add((header::CONTENT_TYPE, "text/plain; charset=utf-8")))
             .wrap(Logger::default())
     })
