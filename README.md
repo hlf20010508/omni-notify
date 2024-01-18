@@ -71,5 +71,5 @@ docker build --tag omni-notify --no-cache .
 ```sh
 cargo build --release
 # 运行
-./target/release/omni-notify --email $EMAIL --smtp-server $SMTP_SERVER --smtp-username $SMTP_USERNAME --smtp-password $SMTP_PASSWORD --pushdeer-key $PUSHDEER_KEY --tg-bot-token $TG_BOT_TOKEN --tg-chat-id $TG_CHAT_ID
+./target/release/omni-notify --port $PORT --email $EMAIL --smtp-server $SMTP_SERVER --smtp-username $SMTP_USERNAME --smtp-password $SMTP_PASSWORD --pushdeer-key $PUSHDEER_KEY --tg-bot-token $TG_BOT_TOKEN --tg-chat-id $TG_CHAT_ID
 ```

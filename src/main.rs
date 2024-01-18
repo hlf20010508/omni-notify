@@ -14,11 +14,12 @@ mod handlers;
 mod structures;
 mod env;
 
+use env::PORT;
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     const HOST: &str = "0.0.0.0";
-    const PORT: u16 = 8080;
-    println!("Running on http://{}:{}", &HOST, &PORT);
+    println!("Running on http://{}:{}", &HOST, *PORT);
 
     env_logger::init_from_env(Env::default().default_filter_or("info"));
 
@@ -30,7 +31,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(DefaultHeaders::new().add((header::CONTENT_TYPE, "text/plain; charset=utf-8")))
             .wrap(Logger::default())
     })
-    .bind((HOST, PORT))?
+    .bind((HOST, *PORT))?
     .run()
     .await;
 }
