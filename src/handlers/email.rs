@@ -21,9 +21,9 @@ pub async fn email_handler(
 ) -> Result<HttpResponse, Box<dyn Error>> {
     let mut args = Arguments::from_env();
     let email_address: String = args.value_from_str("--email")?;
-    let smtp_server_address: String = args.value_from_str("--server")?;
-    let username: String = args.value_from_str("--username")?;
-    let password: String = args.value_from_str("--password")?;
+    let smtp_server_address: String = args.value_from_str("--smtp-server")?;
+    let username: String = args.value_from_str("--smtp-username")?;
+    let password: String = args.value_from_str("--smtp-password")?;
 
     let params: MailParams;
     if let Some(query_data) = query {

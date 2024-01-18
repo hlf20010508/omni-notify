@@ -17,7 +17,7 @@ pub async fn push_handler(
     json: Option<web::Json<PushParams>>,
 ) -> Result<HttpResponse, Box<dyn Error>> {
     let mut args = Arguments::from_env();
-    let pushkey: String = args.value_from_str("--pushkey")?;
+    let pushkey: String = args.value_from_str("--pushdeer-key")?;
     let url: String = "https://api2.pushdeer.com/message/push".into();
 
     let push_params: PushParams;
