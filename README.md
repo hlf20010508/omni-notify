@@ -18,7 +18,7 @@ All API support `GET`, `POST-FORM`, `POST-JSON`.
     - `body`
 
 ### Push
-- `/push`
+- `/pushdeer`
     - `title`
     - `body` (optional)
 

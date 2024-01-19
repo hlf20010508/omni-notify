@@ -9,32 +9,32 @@ use actix_web::{web, HttpResponse};
 use std::error::Error;
 
 use crate::env::PUSHDEER_KEY;
-use crate::structures::{PushParams, RequestPushParams};
+use crate::structures::{PushDeerParams, RequestPushDeerParams};
 
 pub async fn push_handler(
-    query: Option<web::Query<PushParams>>,
-    form: Option<web::Form<PushParams>>,
-    json: Option<web::Json<PushParams>>,
+    query: Option<web::Query<PushDeerParams>>,
+    form: Option<web::Form<PushDeerParams>>,
+    json: Option<web::Json<PushDeerParams>>,
 ) -> Result<HttpResponse, Box<dyn Error>> {
     let pushdeer_key = PUSHDEER_KEY.as_ref()?;
     let url: String = "https://api2.pushdeer.com/message/push".into();
 
-    let push_params: PushParams;
+    let pushdeer_params: PushDeerParams;
 
     if let Some(query_data) = query {
-        push_params = query_data.into_inner();
+        pushdeer_params = query_data.into_inner();
     } else if let Some(form_data) = form {
-        push_params = form_data.into_inner();
+        pushdeer_params = form_data.into_inner();
     } else if let Some(json_data) = json {
-        push_params = json_data.into_inner();
+        pushdeer_params = json_data.into_inner();
     } else {
         return Err("Invalid request.".into());
     }
 
-    let params = RequestPushParams {
+    let params = RequestPushDeerParams {
         pushkey: pushdeer_key.into(),
-        text: push_params.title,
-        desp: push_params.body,
+        text: pushdeer_params.title,
+        desp: pushdeer_params.body,
         type_field: "markdown".into(),
     };
 

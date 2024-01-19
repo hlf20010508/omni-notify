@@ -14,7 +14,7 @@ pub struct MailParams {
 }
 
 #[derive(Deserialize)]
-pub struct PushParams {
+pub struct PushDeerParams {
     pub title: String,
     pub body: Option<String>,
 }
@@ -31,7 +31,7 @@ pub struct RequestTelegramParams {
 }
 
 #[derive(Serialize)]
-pub struct RequestPushParams {
+pub struct RequestPushDeerParams {
     pub pushkey: String,
     pub text: String,
     pub desp: Option<String>,
