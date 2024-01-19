@@ -1,10 +1,12 @@
 use lazy_static::lazy_static;
 use pico_args::{Arguments, Error};
 use std::str::FromStr;
+use std::fmt::Display;
 
-fn get_arg_value<T: FromStr>(arg_name: &'static str) -> Result<T, Error>
+fn get_arg_value<T>(arg_name: &'static str) -> Result<T, Error>
 where
-    T::Err: std::error::Error,
+    T: FromStr,
+    T::Err: Display,
 {
     let mut args = Arguments::from_env();
     let value: T = args.value_from_str(arg_name)?;
