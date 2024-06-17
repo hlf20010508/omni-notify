@@ -5,35 +5,38 @@
 :license: MIT, see LICENSE for more details.
 */
 
-use axum::Extension;
+use axum::{debug_handler, Extension};
 use std::sync::Arc;
 
-use super::models::{RequestTelegramParams, TelegramParams};
+use super::models::{PushdeerParams, RequestPushdeerParams};
 use crate::env::Env;
 use crate::error::{Error, Result};
 
-pub static PATH: &str = "/telegram";
+pub static PATH: &str = "/pushdeer";
 
+#[debug_handler]
 pub async fn handler(
     Extension(env): Extension<Arc<Env>>,
-    params: TelegramParams,
+    params: PushdeerParams,
 ) -> Result<String> {
-    let env = env.telegram.clone()?;
+    let env = env.pushdeer.clone()?;
 
-    let request_params = RequestTelegramParams {
-        chat_id: env.chat_id,
-        text: params.text,
+    let url = "https://api2.pushdeer.com/message/push".to_string();
+
+    let params = RequestPushdeerParams {
+        pushkey: env.key,
+        text: params.title,
+        desp: params.body,
+        type_field: "markdown".into(),
     };
-
-    let url = format!("https://api.telegram.org/bot{}/sendMessage", env.bot_token);
 
     let client = reqwest::Client::new();
     let response = client
         .get(&url)
-        .query(&request_params)
+        .query(&params)
         .send()
         .await
-        .map_err(|e| Error(format!("failed to send request for telegram: {}", e)))?;
+        .map_err(|e| Error(format!("failed to send request for pushdeer: {}", e)))?;
 
     let result = response
         .text()

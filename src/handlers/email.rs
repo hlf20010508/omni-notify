@@ -5,49 +5,55 @@
 :license: MIT, see LICENSE for more details.
 */
 
-use actix_web::{web, HttpResponse};
+use std::sync::Arc;
+
+use axum::{debug_handler, Extension};
 use lettre::message::header::ContentType;
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, SmtpTransport, Transport};
-use std::error::Error;
 
-use crate::env::{EMAIL, SMTP_PASSWORD, SMTP_SERVER, SMTP_USERNAME};
-use crate::structures::MailParams;
+use super::models::EmailParams;
+use crate::env::Env;
+use crate::error::{Error, Result};
 
-pub async fn email_handler(
-    query: Option<web::Query<MailParams>>,
-    form: Option<web::Form<MailParams>>,
-    json: Option<web::Json<MailParams>>,
-) -> Result<HttpResponse, Box<dyn Error>> {
-    let email_address = EMAIL.as_ref()?;
-    let smtp_server = SMTP_SERVER.as_ref()?;
-    let smtp_username = SMTP_USERNAME.as_ref()?;
-    let smtp_password = SMTP_PASSWORD.as_ref()?;
+pub static PATH: &str = "/email";
 
-    let params: MailParams;
-    if let Some(query_data) = query {
-        params = query_data.into_inner();
-    } else if let Some(form_data) = form {
-        params = form_data.into_inner();
-    } else if let Some(json_data) = json {
-        params = json_data.into_inner();
-    } else {
-        return Err("Invalid request.".into());
-    }
+#[debug_handler]
+pub async fn handler(Extension(env): Extension<Arc<Env>>, params: EmailParams) -> Result<String> {
+    let env = env.email.clone()?;
 
     let email = Message::builder()
-        .from(email_address.parse()?)
-        .to(email_address.parse()?)
-        .subject(&params.title)
+        .from(
+            env.address
+                .parse()
+                .map_err(|e| Error(format!("failed to parse email address for from: {}", e)))?,
+        )
+        .to(env
+            .address
+            .parse()
+            .map_err(|e| Error(format!("failed to parse email address for to: {}", e)))?)
+        .subject(params.title)
         .header(ContentType::TEXT_PLAIN)
-        .body(params.body)?;
+        .body(params.body)
+        .map_err(|e| Error(format!("failed to build email: {}", e)))?;
 
-    let creds = Credentials::new(smtp_username.into(), smtp_password.into());
+    let creds = Credentials::new(env.smtp_username.into(), env.smtp_password.into());
 
-    let mailer = SmtpTransport::starttls_relay(smtp_server)?
+    let mailer = SmtpTransport::starttls_relay(&env.smtp_server)
+        .map_err(|e| {
+            Error(format!(
+                "failed to upgrade connection to tls for email: {}",
+                e
+            ))
+        })?
         .credentials(creds)
         .build();
 
-    let result: String = mailer.send(&email)?.message().collect();
-    return Ok(HttpResponse::Ok().body(result));
+    let result: String = mailer
+        .send(&email)
+        .map_err(|e| Error(format!("failed to send email: {}", e)))?
+        .message()
+        .collect();
+
+    Ok(result)
 }
