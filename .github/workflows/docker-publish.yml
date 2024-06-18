@@ -30,7 +30,7 @@ jobs:
       with:
         token: ${{ env.GITHUB_TOKEN }}
     
-    - name: Update Version in Your Python Package
+    - name: Update Version
       run: |
         PROJECT_NAME=$(grep '^name = ' Cargo.toml | awk -F'"' '{print $2}')
         sed -i "/^name = \"$PROJECT_NAME\"$/{N; s/version = \".*\"/version = \"$RELEASE_VERSION\"/}" Cargo.toml
