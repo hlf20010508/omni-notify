@@ -5,11 +5,23 @@
 :license: MIT, see LICENSE for more details.
 */
 
+use std::fmt::Display;
+
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 
 #[derive(Debug, Clone)]
 pub struct Error(pub String);
+
+impl Error {
+    pub fn new<T, U>(e: T, message: U) -> Self
+    where
+        T: Display,
+        U: Display,
+    {
+        Self(format!("{}: {}", message.to_string(), e))
+    }
+}
 
 impl IntoResponse for Error {
     fn into_response(self) -> Response {

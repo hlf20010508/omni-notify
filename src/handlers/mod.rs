@@ -9,3 +9,5 @@ pub mod email;
 pub mod models;
 pub mod pushdeer;
 pub mod telegram;
+#[cfg(test)]
+mod tests;

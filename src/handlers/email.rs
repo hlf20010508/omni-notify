@@ -26,32 +26,27 @@ pub async fn handler(Extension(env): Extension<Arc<Env>>, params: EmailParams) -
         .from(
             env.address
                 .parse()
-                .map_err(|e| Error(format!("failed to parse email address for from: {}", e)))?,
+                .map_err(|e| Error::new(e, "failed to parse email address for from"))?,
         )
         .to(env
             .address
             .parse()
-            .map_err(|e| Error(format!("failed to parse email address for to: {}", e)))?)
+            .map_err(|e| Error::new(e, "failed to parse email address for to"))?)
         .subject(params.title)
         .header(ContentType::TEXT_PLAIN)
         .body(params.body)
-        .map_err(|e| Error(format!("failed to build email: {}", e)))?;
+        .map_err(|e| Error::new(e, "failed to build email"))?;
 
     let creds = Credentials::new(env.smtp_username.into(), env.smtp_password.into());
 
     let mailer = SmtpTransport::starttls_relay(&env.smtp_server)
-        .map_err(|e| {
-            Error(format!(
-                "failed to upgrade connection to tls for email: {}",
-                e
-            ))
-        })?
+        .map_err(|e| Error::new(e, "failed to upgrade connection to tls for email"))?
         .credentials(creds)
         .build();
 
     let result: String = mailer
         .send(&email)
-        .map_err(|e| Error(format!("failed to send email: {}", e)))?
+        .map_err(|e| Error::new(e, "failed to send email"))?
         .message()
         .collect();
 

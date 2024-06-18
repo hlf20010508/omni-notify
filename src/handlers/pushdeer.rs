@@ -36,12 +36,12 @@ pub async fn handler(
         .query(&params)
         .send()
         .await
-        .map_err(|e| Error(format!("failed to send request for pushdeer: {}", e)))?;
+        .map_err(|e| Error::new(e, "failed to send request for pushdeer"))?;
 
     let result = response
         .text()
         .await
-        .map_err(|e| Error(format!("failed to get response text for pushdeer: {}", e)))?;
+        .map_err(|e| Error::new(e, "failed to get response text for pushdeer"))?;
 
     Ok(result)
 }

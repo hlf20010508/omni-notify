@@ -32,11 +32,10 @@ macro_rules! query_form_json_impl {
                         let Query(data) = Query::<$params>::from_request(req, state)
                             .await
                             .map_err(|e| {
-                                Error(format!(
-                                    "failed to parse query for {}: {}",
-                                    stringify!($params),
-                                    e
-                                ))
+                                Error::new(
+                                    e,
+                                    format!("failed to parse query for {}", stringify!($params)),
+                                )
                             })?;
 
                         data
@@ -51,11 +50,13 @@ macro_rules! query_form_json_impl {
                             )))?
                             .to_str()
                             .map_err(|e| {
-                                Error(format!(
-                                    "failed to convert content type to str for {}: {}",
-                                    stringify!($params),
-                                    e
-                                ))
+                                Error::new(
+                                    e,
+                                    format!(
+                                        "failed to convert content type to str for {}",
+                                        stringify!($params),
+                                    ),
+                                )
                             })?;
 
                         match content_type {
@@ -63,11 +64,13 @@ macro_rules! query_form_json_impl {
                                 let Json(data) = Json::<$params>::from_request(req, state)
                                     .await
                                     .map_err(|e| {
-                                        Error(format!(
-                                            "failed to parse json for {}: {}",
-                                            stringify!($params),
-                                            e
-                                        ))
+                                        Error::new(
+                                            e,
+                                            format!(
+                                                "failed to parse json for {}",
+                                                stringify!($params),
+                                            ),
+                                        )
                                     })?;
                                 data
                             }
@@ -75,11 +78,13 @@ macro_rules! query_form_json_impl {
                                 let Form(data) = Form::<$params>::from_request(req, state)
                                     .await
                                     .map_err(|e| {
-                                        Error(format!(
-                                            "failed to parse form for {}: {}",
-                                            stringify!($params),
-                                            e
-                                        ))
+                                        Error::new(
+                                            e,
+                                            format!(
+                                                "failed to parse form for {}",
+                                                stringify!($params),
+                                            ),
+                                        )
                                     })?;
                                 data
                             }
@@ -105,7 +110,7 @@ macro_rules! query_form_json_impl {
     };
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct EmailParams {
     pub title: String,
     pub body: String,
@@ -113,7 +118,7 @@ pub struct EmailParams {
 
 query_form_json_impl!(EmailParams);
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct PushdeerParams {
     pub title: String,
     pub body: Option<String>,
@@ -130,7 +135,7 @@ pub struct RequestPushdeerParams {
     pub type_field: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 pub struct TelegramParams {
     pub text: String,
 }
